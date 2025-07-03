@@ -8,8 +8,8 @@ export default function StorySec() {
     return (
         <div className="flex flex-row gap-4 items-center">
             <div className='flex flex-col items-center justify-center gap-2 w-20'>
-                <div className='rounded-full border border-dashed border-[#545454] w-14 h-14 flex items-center justify-center'>
-                    <GoPlus className="text-[#545454]" />
+                <div className='rounded-full border border-dashed border-custom-gray-light w-14 h-14 flex items-center justify-center'>
+                    <GoPlus className="text-custom-gray-light" />
                 </div>
                 <p className="text-xs">Add story</p>
             </div>

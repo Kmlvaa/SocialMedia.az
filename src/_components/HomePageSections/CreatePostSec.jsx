@@ -9,18 +9,18 @@ export default function CreatePostSec() {
                     <img src='https://img.freepik.com/premium-vector/man-professional-business-casual-young-avatar-icon-illustration_1277826-623.jpg?semt=ais_hybrid&w=740' alt='Profile Photo' className='rounded-full object-cover' />
                 </div>
                 <div className='w-full'>
-                    <input className='border-[#2c2c2c] border bg-[#101010] text-[#5b5b5c] p-2 text-xs w-full rounded-lg' placeholder='What is happening?' />
+                    <input className='border-custom-gray1 border bg-[#101010] text-custom-gray-light p-2 text-xs w-full rounded-lg' placeholder='What is happening?' />
                 </div>
             </div>
             <div className="mt-8 flex flex-row justify-between">
                 <div className="flex flex-row items-center gap-5">
                     <div className="flex flex-row gap-1 items-center">
-                        <LuImage className="text-[#838384]" />
-                        <p className="text-[#838384] text-xs">Media Content</p>
+                        <LuImage className="text-custom-gray-light" />
+                        <p className="text-custom-gray-light text-xs">Media Content</p>
                     </div>
                     <div className="flex flex-row gap-1 items-center">
-                        <FaHashtag className="text-[#838384]" />
-                        <p className="text-[#838384] text-xs">Hashtags</p>
+                        <FaHashtag className="text-custom-gray-light" />
+                        <p className="text-custom-gray-light text-xs">Hashtags</p>
                     </div>
                 </div>
                 <button className="text-xs rounded-md bg-red-700 py-1 px-4 hover:bg-red-500">Post</button>

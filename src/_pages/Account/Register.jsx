@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
 
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setlastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -24,7 +24,7 @@ export default function Register() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, firstname, lastname, password }),
+                body: JSON.stringify({ email, firstName, lastName, password }),
             });
 
             const data = await response.json();
@@ -56,14 +56,14 @@ export default function Register() {
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>Firstname</label>
-                    <input placeholder='Enter your firstname' type='text' value={firstname} required
-                        onChange={(e) => setFirstname(e.target.value)}
+                    <input placeholder='Enter your firstName' type='text' value={firstName} required
+                        onChange={(e) => setFirstName(e.target.value)}
                         className='bg-stone-800 text-white p-2 rounded-md text-sm' />
                 </div>
                 <div className='flex flex-col gap-2'>
-                    <label className='text-sm'>Lastname</label>
-                    <input placeholder='Enter your lastname' type='text' value={lastname} required
-                        onChange={(e) => setLastname(e.target.value)}
+                    <label className='text-sm'>lastName</label>
+                    <input placeholder='Enter your lastName' type='text' value={lastName} required
+                        onChange={(e) => setlastName(e.target.value)}
                         className='bg-stone-800 text-white p-2 rounded-md text-sm' />
                 </div>
                 <div className='flex flex-col gap-2'>

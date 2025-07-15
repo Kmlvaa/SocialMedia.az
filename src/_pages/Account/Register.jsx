@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router';
 
 export default function Register() {
 
-    const [username, setUsername] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,13 +24,16 @@ export default function Register() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, username, password }),
+                body: JSON.stringify({ email, firstname, lastname, password }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 setSuccess('Register successful!');
+
+                navigate('/account/login');
+
             } else {
                 setError(data.message || 'Register failed');
             }
@@ -46,9 +53,15 @@ export default function Register() {
                         className='bg-stone-800 text-white p-2 rounded-md text-sm' />
                 </div>
                 <div className='flex flex-col gap-2'>
-                    <label className='text-sm'>Username</label>
-                    <input placeholder='Enter your username' type='text' value={username} required autoComplete='username'
-                        onChange={(e) => setUsername(e.target.value)}
+                    <label className='text-sm'>Firstname</label>
+                    <input placeholder='Enter your firstname' type='text' value={firstname} required autoComplete='firstname'
+                        onChange={(e) => setFirstname(e.target.value)}
+                        className='bg-stone-800 text-white p-2 rounded-md text-sm' />
+                </div>
+                <div className='flex flex-col gap-2'>
+                    <label className='text-sm'>Lastname</label>
+                    <input placeholder='Enter your lastname' type='text' value={lastname} required autoComplete='lastname'
+                        onChange={(e) => setLastname(e.target.value)}
                         className='bg-stone-800 text-white p-2 rounded-md text-sm' />
                 </div>
                 <div className='flex flex-col gap-2'>

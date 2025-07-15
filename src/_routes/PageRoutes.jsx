@@ -16,7 +16,7 @@ export default function PageRoutes() {
       <Route path='/account' element={<AccountLayout />}>
         <Route path='/account/login' element={<Login />} />
         <Route path='/account/register' element={<Register />} />
-        <Route path='/account/verifyEmail' element={<VerifyCode />} />
+        <Route path='/account/verifyCode' element={<VerifyCode />} />
       </Route>
     </Routes>
   )

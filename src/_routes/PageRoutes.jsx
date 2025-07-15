@@ -5,6 +5,7 @@ import Home from '../_pages/Home'
 import AccountLayout from '../_pages/Account/AccountLayout'
 import Login from '../_pages/Account/Login'
 import Register from '../_pages/Account/Register'
+import VerifyCode from '../_pages/Account/VerifyCode'
 
 export default function PageRoutes() {
   return (
@@ -15,6 +16,7 @@ export default function PageRoutes() {
       <Route path='/account' element={<AccountLayout />}>
         <Route path='/account/login' element={<Login />} />
         <Route path='/account/register' element={<Register />} />
+        <Route path='/account/verifyEmail' element={<VerifyCode />} />
       </Route>
     </Routes>
   )

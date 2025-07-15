@@ -32,7 +32,7 @@ export default function Register() {
             if (response.ok) {
                 setSuccess('Register successful!');
 
-                navigate('/account/login');
+                navigate('/account/verifyCode');
 
             } else {
                 setError(data.message || 'Register failed');
@@ -54,13 +54,13 @@ export default function Register() {
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>Firstname</label>
-                    <input placeholder='Enter your firstname' type='text' value={firstname} required autoComplete='firstname'
+                    <input placeholder='Enter your firstname' type='text' value={firstname} required
                         onChange={(e) => setFirstname(e.target.value)}
                         className='bg-stone-800 text-white p-2 rounded-md text-sm' />
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>Lastname</label>
-                    <input placeholder='Enter your lastname' type='text' value={lastname} required autoComplete='lastname'
+                    <input placeholder='Enter your lastname' type='text' value={lastname} required
                         onChange={(e) => setLastname(e.target.value)}
                         className='bg-stone-800 text-white p-2 rounded-md text-sm' />
                 </div>

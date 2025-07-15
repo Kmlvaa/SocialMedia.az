@@ -31,11 +31,19 @@ export default function Login() {
             if (response.ok) {
                 setSuccess('Login successful!');
 
-            navigate('/home');
-                
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                }
+
+                setTimeout(() => {
+                    navigate('/home');
+                }, 1500);
+
             } else {
                 setError(data.message || 'Login failed');
-                navigate('/account/login');
+                setTimeout(() => {
+                    navigate('/account/login');
+                }, 1500);
             }
         } catch (err) {
             setError('Network error');

@@ -32,7 +32,9 @@ export default function Register() {
             if (response.ok) {
                 setSuccess('Register successful!');
 
-                navigate('/account/verifyCode');
+                setTimeout(() => {
+                    navigate('/account/verifyCode');
+                }, 1500);
 
             } else {
                 setError(data.message || 'Register failed');
@@ -74,7 +76,7 @@ export default function Register() {
                 {error ? <p className='text-red-600 text-xs'>{error}</p> : <></>}
                 {success ? <p className='text-green-500 text-xs'>{success}</p> : <></>}
             </form>
-             <div>
+            <div>
                 <p className='text-xs'>Already have an account? <a href='/account/login' className='text-red-500 cursor-pointer hover:text-red-400'>Login</a></p>
             </div>
         </div>

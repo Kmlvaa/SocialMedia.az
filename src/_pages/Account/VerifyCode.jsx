@@ -7,6 +7,7 @@ export default function VerifyCode() {
 
     const [message, setMessage] = useState('');
     const [status, setStatus] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -14,6 +15,7 @@ export default function VerifyCode() {
         e.preventDefault();
         setMessage('');
         setStatus('');
+        setLoading(true);
 
         try {
             const response = await fetch(`http://localhost:5000/api/verify?code=${code}`);
@@ -22,16 +24,20 @@ export default function VerifyCode() {
             if (response.ok) {
                 setStatus('success');
                 setMessage(data.message || 'Verification successful!');
-                navigate('/account/login');
+                setTimeout(() => {
+                    navigate('/account/login');
+                }, 1500);
 
             } else {
                 setStatus('error');
                 setMessage(data.message || 'Verification failed.');
-                // navigate('account/verifyCode');
             }
         } catch (err) {
             setStatus('error');
             setMessage('Failed to fetch.');
+        }
+        finally{
+            setLoading(false);
         }
     }
 
@@ -47,7 +53,9 @@ export default function VerifyCode() {
                     required
                     className='bg-stone-800 p-2 rounded text-sm text-white'
                 />
-                <button type='submit' className='bg-green-600 hover:bg-green-500 p-2 rounded'>Verify</button>
+                <button type='submit' disabled={loading} className='bg-green-600 hover:bg-green-500 p-2 rounded'>
+                    {loading ? 'Verifying...' : 'Verify'}
+                </button>
             </form>
             {message && (
                 <p className={`text-sm ${status === 'success' ? 'text-green-400' : 'text-red-400'}`}>

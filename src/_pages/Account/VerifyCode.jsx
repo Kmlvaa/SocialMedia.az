@@ -1,9 +1,10 @@
+import { useFormik } from 'formik';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { verifyCode } from '../../services/AuthService';
+import { verifyCodeSchema } from '../../schemas/VerifyCodeSchema'
 
 export default function VerifyCode() {
-
-    const [code, setCode] = useState(null);
 
     const [message, setMessage] = useState('');
     const [status, setStatus] = useState('');
@@ -11,48 +12,95 @@ export default function VerifyCode() {
 
     const navigate = useNavigate();
 
-    const handleVerify = async (e) => {
-        e.preventDefault();
-        setMessage('');
-        setStatus('');
-        setLoading(true);
+    // const handleVerify = async (e) => {
+    //     e.preventDefault();
+    //     setMessage('');
+    //     setStatus('');
+    //     setLoading(true);
 
-        try {
-            const response = await fetch(`http://localhost:5000/api/verify?code=${code}`);
-            const data = await response.json();
+    //     try {
+    //         const response = await fetch(
+    //             `http://localhost:5000/api/verify?code=${encodeURIComponent(code)}`
+    //         );
 
-            if (response.ok) {
+    //         let data = {};
+    //         try {
+    //             data = await response.json();
+    //         } catch (err) { console.log(err) }
+
+    //         if (response.ok) {
+    //             setStatus('success');
+    //             setMessage(data.message || 'Verification successful!');
+    //             setTimeout(() => {
+    //                 navigate('/account/login');
+    //             }, 1500);
+
+    //         } else {
+    //             setStatus('error');
+    //             setMessage(data.message || 'Verification failed.');
+    //         }
+    //     } catch (err) {
+    //         setStatus('error');
+    //         setMessage('Failed to fetch.');
+    //     }
+    //     finally {
+    //         setLoading(false);
+    //     }
+    // }
+    const formik = useFormik({
+        initialValues: {
+            code: ''
+        },
+        onSubmit: async (values, actions) => {
+            try {
+                setLoading(true);
+
+                const response = await verifyCode(values);
+
                 setStatus('success');
-                setMessage(data.message || 'Verification successful!');
+                setMessage(response.data)
+
+                setLoading(false);
+
                 setTimeout(() => {
                     navigate('/account/login');
                 }, 1500);
 
-            } else {
-                setStatus('error');
-                setMessage(data.message || 'Verification failed.');
+                actions.resetForm();
             }
-        } catch (err) {
-            setStatus('error');
-            setMessage('Failed to fetch.');
+            catch (err) {
+                setStatus('failed');
+                setMessage(err.response.data);
+            }
+        },
+        validationSchema: verifyCodeSchema
+    })
+    const handleCodeChange = (e) => {
+        const value = e.target.value;
+        if (/^\d{0,6}$/.test(value)) {
+            formik.setFieldValue('code', value);
         }
-        finally{
-            setLoading(false);
-        }
-    }
+    };
 
     return (
         <div className='flex flex-col items-center gap-4 p-10 w-96 rounded-lg bg-stone-900 text-white'>
             <h2 className='text-xl font-semibold'>Verify Your Email</h2>
-            <form onSubmit={handleVerify} className='flex flex-col gap-4 w-full'>
+            <form onSubmit={formik.handleSubmit} className='flex flex-col gap-4 w-full'>
                 <input
                     type='text'
+                    inputMode='numeric'
+                    pattern='[0-9]*'
+                    maxLength={6}
+                    name='code'
                     placeholder='Enter the verification code'
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    value={formik.values.code}
+                    onChange={handleCodeChange}
+                    onBlur={formik.handleBlur}
                     required
-                    className='bg-stone-800 p-2 rounded text-sm text-white'
+                    className={formik.errors.code && formik.touched.code ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'}
                 />
+                {formik.errors.code && formik.touched.code && <p className='text-red-600 text-xs'>{formik.errors.code}</p>}
+
                 <button type='submit' disabled={loading} className='bg-green-600 hover:bg-green-500 p-2 rounded'>
                     {loading ? 'Verifying...' : 'Verify'}
                 </button>

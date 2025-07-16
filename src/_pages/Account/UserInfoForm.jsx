@@ -49,10 +49,10 @@ export default function UserInfoForm() {
                 setSuccess(response.data.message)
 
                 setTimeout(() => {
+                    actions.resetForm();
                     navigate('/home');
                 }, 1500);
 
-                actions.resetForm();
             }
             catch (err) {
                 console.log(err);

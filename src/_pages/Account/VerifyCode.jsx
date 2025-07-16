@@ -32,10 +32,10 @@ export default function VerifyCode() {
                 setLoading(false);
 
                 setTimeout(() => {
+                    actions.resetForm();
                     navigate('/account/login');
                 }, 1500);
 
-                actions.resetForm();
             }
             catch (err) {
                 setStatus('failed');

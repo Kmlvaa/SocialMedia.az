@@ -55,10 +55,10 @@ export default function Register() {
                 setSuccess(response.data.message)
 
                 setTimeout(() => {
+                    actions.resetForm();
                     navigate('/account/verifyCode', { state: { email: values.email } });
                 }, 1500);
 
-                actions.resetForm();
             }
             catch (err) {
                 console.log(err);

@@ -67,10 +67,10 @@ export default function Login() {
                 // }
 
                 setTimeout(() => {
+                    actions.resetForm();
                     navigate('/home');
                 }, 1500);
 
-                actions.resetForm();
             }
             catch (err) {
                 console.log(err);

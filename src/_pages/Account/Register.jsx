@@ -50,18 +50,21 @@ export default function Register() {
         },
         onSubmit: async (values, actions) => {
             try {
+                console.log(values)
                 const response = await register(values);
-                setSuccess(response.data)
+                setSuccess(response.data.message)
 
                 setTimeout(() => {
-                    navigate('/account/verifyCode');
+                    navigate('/account/verifyCode', { state: { email: values.email } });
                 }, 1500);
 
                 actions.resetForm();
             }
             catch (err) {
                 console.log(err);
-                setError(err.response.data);
+                const errorMessage =
+                    err.response?.data?.message || err.message || "Something went wrong";
+                setError(errorMessage);
             }
         },
         validationSchema: registerSchema

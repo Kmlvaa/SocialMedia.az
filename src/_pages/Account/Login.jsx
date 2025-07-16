@@ -58,7 +58,7 @@ export default function Login() {
                 const response = await login(values);
                 localStorage.setItem('token', response.data.token);
 
-                setSuccess(response.data);
+                setSuccess(response.data.message);
 
                 // if (!user.isProfileCompleted) {
                 //     navigate('/complete-profile'); 
@@ -74,7 +74,7 @@ export default function Login() {
             }
             catch (err) {
                 console.log(err);
-                setError(err.response.data);
+                setError(err.response.data.message);
             }
         },
         validationSchema: loginSchema

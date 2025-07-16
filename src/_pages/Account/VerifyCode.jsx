@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { verifyCode } from '../../services/AuthService';
 import { verifyCodeSchema } from '../../schemas/VerifyCodeSchema'
 
@@ -11,44 +11,13 @@ export default function VerifyCode() {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+    const location = useLocation();
 
-    // const handleVerify = async (e) => {
-    //     e.preventDefault();
-    //     setMessage('');
-    //     setStatus('');
-    //     setLoading(true);
+    const userEmail = location.state?.email || '';
 
-    //     try {
-    //         const response = await fetch(
-    //             `http://localhost:5000/api/verify?code=${encodeURIComponent(code)}`
-    //         );
-
-    //         let data = {};
-    //         try {
-    //             data = await response.json();
-    //         } catch (err) { console.log(err) }
-
-    //         if (response.ok) {
-    //             setStatus('success');
-    //             setMessage(data.message || 'Verification successful!');
-    //             setTimeout(() => {
-    //                 navigate('/account/login');
-    //             }, 1500);
-
-    //         } else {
-    //             setStatus('error');
-    //             setMessage(data.message || 'Verification failed.');
-    //         }
-    //     } catch (err) {
-    //         setStatus('error');
-    //         setMessage('Failed to fetch.');
-    //     }
-    //     finally {
-    //         setLoading(false);
-    //     }
-    // }
     const formik = useFormik({
         initialValues: {
+            email: userEmail,
             code: ''
         },
         onSubmit: async (values, actions) => {
@@ -58,7 +27,7 @@ export default function VerifyCode() {
                 const response = await verifyCode(values);
 
                 setStatus('success');
-                setMessage(response.data)
+                setMessage(response.data.message)
 
                 setLoading(false);
 
@@ -70,7 +39,7 @@ export default function VerifyCode() {
             }
             catch (err) {
                 setStatus('failed');
-                setMessage(err.response.data);
+                setMessage(err.response.data.message);
             }
         },
         validationSchema: verifyCodeSchema

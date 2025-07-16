@@ -3,7 +3,7 @@ import Axios from "axios";
 const token = localStorage.getItem('token');
 
 const api = Axios.create({
-    baseURL: process.env.API_ENDPOINT,
+    baseURL: process.env.REACT_APP_API_ENDPOINT || 'http://localhost:5000/api',
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

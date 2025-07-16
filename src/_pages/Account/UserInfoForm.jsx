@@ -46,7 +46,7 @@ export default function UserInfoForm() {
 
                 const response = await userInfoForm(formData);
 
-                setSuccess(response.data)
+                setSuccess(response.data.message)
 
                 setTimeout(() => {
                     navigate('/home');
@@ -56,7 +56,7 @@ export default function UserInfoForm() {
             }
             catch (err) {
                 console.log(err);
-                setError(err.response.data);
+                setError(err.response.data.message);
             }
         },
         validationSchema: userInfoFormSchema

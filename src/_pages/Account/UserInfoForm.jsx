@@ -3,25 +3,30 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { userInfoForm } from '../../services/AuthService';
 import { useEffect } from 'react';
-import axios from 'axios';
 import { userInfoFormSchema } from '../../schemas/UserInfoFormSchema';
+import { useDispatch, useSelector } from 'react-redux';
+import { setProfileCompleted, updateProfileInfo } from '../../redux/userSlice';
+import { fetchProfessions } from '../../redux/professionsSlice';
 
 
 export default function UserInfoForm() {
-
-    const [professions, setProfessions] = useState([]);
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [preview, setPreview] = useState(null);
 
+    const api = process.env.REACT_APP_API_ENDPOINT;
     const navigate = useNavigate();
 
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
+
+    const { list: professions, status } = useSelector((state) => state.professions);
+
     useEffect(() => {
-        axios.get('/api/professions')
-            .then(res => setProfessions(res.data))
-            .catch(err => console.error('Error loading professions', err));
-    }, []);
+        dispatch(fetchProfessions());
+    }, [dispatch]);
+
     useEffect(() => {
         return () => {
             if (preview) {
@@ -35,7 +40,6 @@ export default function UserInfoForm() {
             image: null,
             bio: '',
             profession: '',
-            isProfileCompleted: true
         },
         onSubmit: async (values, actions) => {
             try {
@@ -45,8 +49,15 @@ export default function UserInfoForm() {
                 formData.append('profession', values.profession);
 
                 const response = await userInfoForm(formData);
+                dispatch(updateProfileInfo({
+                    bio: formik.values.bio,
+                    profession: formik.values.profession,
+                    imageUrl: preview,
+                }))
+                dispatch(setProfileCompleted(true))
+                console.log(user.profileCompleted);
 
-                setSuccess(response.data.message)
+                setSuccess(response.data.message);
 
                 setTimeout(() => {
                     actions.resetForm();
@@ -116,19 +127,22 @@ export default function UserInfoForm() {
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>Profession</label>
-                    <select
-                        name="profession"
-                        value={formik.values.profession}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        className="form-select rounded-md text-sm p-2 text-gray-400 bg-stone-800 cursor-pointer"
-                    >
-                        <option className='bg-stone-800 text-gray-400' value="">Select profession</option>
-                        {professions.map((item) => (
-                            <option key={item} value={item}
-                            className='text-gray-400 bg-stone-800'>{item}</option>
-                        ))}
-                    </select>
+                    {status === 'loading' && <p>Loading professions...</p>}
+                    {status === 'failed' && <p className="text-red-500">{error}</p>}
+                    {status === 'succeeded' && (
+                        <select
+                            name="profession"
+                            value={formik.values.profession}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className="form-select rounded-md text-sm p-2 text-gray-400 bg-stone-800 cursor-pointer">
+                            <option value="">Select a profession</option>
+                            {professions.map((prof, index) => (
+                                <option key={index} value={prof}
+                                    className='text-gray-400 bg-stone-800'>{prof}</option>
+                            ))}
+                        </select>
+                    )}
                 </div>
                 <button type='submit' className='p-2 rounded-md bg-red-600 hover:bg-red-500 mt-5'>Submit</button>
                 {error ? <p className='text-red-600 text-xs'>{error}</p> : <></>}

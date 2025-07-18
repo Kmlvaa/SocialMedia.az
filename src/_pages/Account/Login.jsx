@@ -3,51 +3,20 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/AuthService';
 import { loginSchema } from '../../schemas/LoginSchema';
+import { httpClient } from '../../utils/httpClient';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../../redux/userSlice';
 
 export default function Login() {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setError('');
-    //     setSuccess('');
+    const dispatch = useDispatch();
 
-    //     try {
-    //         const response = await fetch('http://localhost:5000/api/login', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ email, password }),
-    //         });
-
-    //         const data = await response.json();
-
-    //         if (response.ok) {
-    //             setSuccess('Login successful!');
-
-    //             if (data.token) {
-    //                 localStorage.setItem('token', data.token);
-    //             }
-
-    //             setTimeout(() => {
-    //                 navigate('/home');
-    //             }, 1500);
-
-    //         } else {
-    //             setError(data.message || 'Login failed');
-    //             setTimeout(() => {
-    //                 navigate('/account/login');
-    //             }, 1500);
-    //         }
-    //     } catch (err) {
-    //         setError('Network error');
-    //     }
-    // }
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -55,22 +24,25 @@ export default function Login() {
         },
         onSubmit: async (values, actions) => {
             try {
+                setLoading(true);
                 const response = await login(values);
-                localStorage.setItem('token', response.data.token);
+                console.log(response.data.message);
 
-                setSuccess(response.data.message);
+                setSuccess('Successfully logged in!');
 
-                // if (!user.isProfileCompleted) {
-                //     navigate('/complete-profile'); 
-                // } else {
-                //     navigate('/home'); 
-                // }
+                httpClient.setToken(response.data.accessToken);
+                dispatch(setUser(response.data));
+
+                actions.resetForm();
+                setLoading(false);
 
                 setTimeout(() => {
-                    actions.resetForm();
-                    navigate('/home');
-                }, 1500);
-
+                    if (!response.data.profileCompleted) {
+                        navigate('/account/complete-profile');
+                    } else {
+                        navigate('/home');
+                    }
+                }, 3000);
             }
             catch (err) {
                 console.log(err);
@@ -116,7 +88,9 @@ export default function Login() {
                 <div className='flex flex-row items-center justify-between text-xs text-gray-600'>
                     <p className='underline cursor-pointer hover:text-gray-400'>Forgot password?</p>
                 </div>
-                <button type='submit' className='p-2 rounded-md bg-red-600 hover:bg-red-500 mt-5'>Login</button>
+                <button type='submit' className='p-2 rounded-md bg-red-600 hover:bg-red-500 mt-5'>
+                    {loading ? 'Loading...' : 'Login'}
+                </button>
                 {error ? <p className='text-red-600 text-xs'>{error}</p> : <></>}
                 {success ? <p className='text-green-500 text-xs'>{success}</p> : <></>}
             </form>

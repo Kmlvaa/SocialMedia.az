@@ -8,39 +8,10 @@ export default function Register() {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setError('');
-    //     setSuccess('');
-
-    //     try {
-    //         const response = await fetch('http://localhost:5000/api/register', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ email, firstName, lastName, password }),
-    //         });
-
-    //         const data = await response.json();
-
-    //         if (response.ok) {
-    //             setSuccess('Register successful!');
-
-    //             setTimeout(() => {
-    //                 navigate('/account/verifyCode');
-    //             }, 1500);
-
-    //         } else {
-    //             setError(data.message || 'Register failed');
-    //         }
-    //     } catch (err) {
-    //         setError('Network error');
-    //     }
-    // }
     const formik = useFormik({
         initialValues: {
             firstName: '',
@@ -50,15 +21,16 @@ export default function Register() {
         },
         onSubmit: async (values, actions) => {
             try {
-                console.log(values)
+                setLoading(true)
                 const response = await register(values);
+                console.log(response.data.message)
                 setSuccess(response.data.message)
 
                 setTimeout(() => {
                     actions.resetForm();
                     navigate('/account/verifyCode', { state: { email: values.email } });
-                }, 1500);
-
+                }, 3000);
+                setLoading(false)
             }
             catch (err) {
                 console.log(err);
@@ -132,7 +104,9 @@ export default function Register() {
                         className={formik.errors.password && formik.touched.password ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
                     {formik.errors.password && formik.touched.password && <p className='text-red-600 text-xs'>{formik.errors.password}</p>}
                 </div>
-                <button type='submit' className='p-2 rounded-md bg-red-600 hover:bg-red-500 mt-5'>Register</button>
+                <button type='submit' className='p-2 rounded-md bg-red-600 hover:bg-red-500 mt-5'>
+                    {loading ? 'Loading...' : 'Register'}
+                </button>
                 {error ? <p className='text-red-600 text-xs'>{error}</p> : <></>}
                 {success ? <p className='text-green-500 text-xs'>{success}</p> : <></>}
             </form>

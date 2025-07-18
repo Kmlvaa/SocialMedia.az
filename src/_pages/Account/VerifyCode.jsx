@@ -24,7 +24,7 @@ export default function VerifyCode() {
             try {
                 setLoading(true);
 
-                const response = await verifyCode(values);
+                const response = await verifyCode(String(values.code));
 
                 setStatus('success');
                 setMessage(response.data.message)
@@ -34,7 +34,7 @@ export default function VerifyCode() {
                 setTimeout(() => {
                     actions.resetForm();
                     navigate('/account/login');
-                }, 1500);
+                }, 2000);
 
             }
             catch (err) {

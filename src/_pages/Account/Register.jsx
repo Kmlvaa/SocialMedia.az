@@ -10,6 +10,8 @@ export default function Register() {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const fieldError = (name) => formik.touched[name] && formik.errors[name];
+
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -23,20 +25,23 @@ export default function Register() {
             try {
                 setLoading(true)
                 const response = await register(values);
-                console.log(response.data.message)
-                setSuccess(response.data.message)
+                setSuccess("Account created!")
 
                 setTimeout(() => {
-                    actions.resetForm();
                     navigate('/account/verifyCode', { state: { email: values.email } });
-                }, 3000);
-                setLoading(false)
+                }, 2000);
             }
             catch (err) {
                 console.log(err);
                 const errorMessage =
                     err.response?.data?.message || err.message || "Something went wrong";
                 setError(errorMessage);
+            }
+            finally {
+                setTimeout(() => {
+                    actions.resetForm();
+                }, 1500)
+                setLoading(false);
             }
         },
         validationSchema: registerSchema
@@ -59,8 +64,8 @@ export default function Register() {
                         onBlur={formik.handleBlur}
                         required
                         autoComplete='email'
-                        className={formik.errors.email && formik.touched.email ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
-                    {formik.errors.email && formik.touched.email && <p className='text-red-600 text-xs'>{formik.errors.email}</p>}
+                        className={fieldError("email") ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
+                    {fieldError("email") && <p className='text-red-600 text-xs'>{formik.errors.email}</p>}
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>Firstname</label>
@@ -73,8 +78,8 @@ export default function Register() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         required
-                        className={formik.errors.firstName && formik.touched.firstName ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
-                    {formik.errors.firstName && formik.touched.firstName && <p className='text-red-600 text-xs'>{formik.errors.firstName}</p>}
+                        className={fieldError("firstName") ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
+                    {fieldError("firstName") && <p className='text-red-600 text-xs'>{formik.errors.firstName}</p>}
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>lastName</label>
@@ -87,8 +92,8 @@ export default function Register() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         required
-                        className={formik.errors.lastName && formik.touched.lastName ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
-                    {formik.errors.lastName && formik.touched.lastName && <p className='text-red-600 text-xs'>{formik.errors.lastName}</p>}
+                        className={fieldError("lastName") ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
+                    {fieldError("lastName") && <p className='text-red-600 text-xs'>{formik.errors.lastName}</p>}
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>Password</label>
@@ -101,8 +106,8 @@ export default function Register() {
                         autoComplete='new-password'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        className={formik.errors.password && formik.touched.password ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
-                    {formik.errors.password && formik.touched.password && <p className='text-red-600 text-xs'>{formik.errors.password}</p>}
+                        className={fieldError("password") && formik.touched.password ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
+                    {fieldError("password") && <p className='text-red-600 text-xs'>{formik.errors.password}</p>}
                 </div>
                 <button type='submit' className='p-2 rounded-md bg-red-600 hover:bg-red-500 mt-5'>
                     {loading ? 'Loading...' : 'Register'}

@@ -13,6 +13,8 @@ export default function Login() {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const fieldError = (name) => formik.touched[name] && formik.errors[name];
+
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
@@ -26,27 +28,32 @@ export default function Login() {
             try {
                 setLoading(true);
                 const response = await login(values);
-                console.log(response.data.message);
 
                 setSuccess('Successfully logged in!');
+                console.log(response.data)
 
                 httpClient.setToken(response.data.accessToken);
                 dispatch(setUser(response.data));
 
-                actions.resetForm();
-                setLoading(false);
-
+                console.log('Profile completed:', response.data.profileCompleted);
                 setTimeout(() => {
                     if (!response.data.profileCompleted) {
                         navigate('/account/complete-profile');
                     } else {
                         navigate('/home');
+                        console.log('Profile completed2:', response.data.profileCompleted);
                     }
-                }, 3000);
+                }, 2000);
             }
             catch (err) {
                 console.log(err);
                 setError(err.response.data.message);
+            }
+            finally {
+                setTimeout(() => {
+                    actions.resetForm();
+                }, 1500)
+                setLoading(false);
             }
         },
         validationSchema: loginSchema
@@ -68,8 +75,8 @@ export default function Login() {
                         onBlur={formik.handleBlur}
                         required
                         autoComplete='email'
-                        className={formik.errors.email && formik.touched.email ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
-                    {formik.errors.email && formik.touched.email && <p className='text-red-600 text-xs'>{formik.errors.email}</p>}
+                        className={fieldError("email") ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
+                    {fieldError("email") && <p className='text-red-600 text-xs'>{formik.errors.email}</p>}
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>Password</label>
@@ -82,8 +89,8 @@ export default function Login() {
                         autoComplete='new-password'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        className={formik.errors.password && formik.touched.password ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
-                    {formik.errors.password && formik.touched.password && <p className='text-red-600 text-xs'>{formik.errors.password}</p>}
+                        className={fieldError("password") ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
+                    {fieldError("password") && <p className='text-red-600 text-xs'>{formik.errors.password}</p>}
                 </div>
                 <div className='flex flex-row items-center justify-between text-xs text-gray-600'>
                     <p className='underline cursor-pointer hover:text-gray-400'>Forgot password?</p>

@@ -13,7 +13,7 @@ export default function PostsSec() {
         <div className='my-5'>
             {data.map((post) => {
                 return (
-                    <div className='bg-black my-5 rounded-lg p-5 text-xs'>
+                    <div key={post.id} className='bg-black my-5 rounded-lg p-5 text-xs'>
                         <header className='flex flex-row justify-between items-center'>
                             <div className='flex flex-row gap-2 items-center justify-start'>
                                 <div className='rounded-full w-8 h-8 bg-gradient-to-tr from-pink-500 via-purple-500 to-yellow-500 p-[2px]'>

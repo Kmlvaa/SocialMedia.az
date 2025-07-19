@@ -1,10 +1,11 @@
 import { useFormik } from 'formik';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { verifyCode } from '../../services/AuthService';
 import { verifyCodeSchema } from '../../schemas/VerifyCodeSchema'
 
 export default function VerifyCode() {
+
 
     const [message, setMessage] = useState('');
     const [status, setStatus] = useState('');
@@ -14,10 +15,14 @@ export default function VerifyCode() {
     const location = useLocation();
 
     const userEmail = location.state?.email || '';
+    useEffect(() => {
+        if (!userEmail) {
+            navigate('/account/login');
+        }
+    }, [userEmail, navigate]);
 
     const formik = useFormik({
         initialValues: {
-            email: userEmail,
             code: ''
         },
         onSubmit: async (values, actions) => {
@@ -29,10 +34,7 @@ export default function VerifyCode() {
                 setStatus('success');
                 setMessage(response.data.message)
 
-                setLoading(false);
-
                 setTimeout(() => {
-                    actions.resetForm();
                     navigate('/account/login');
                 }, 2000);
 
@@ -40,6 +42,12 @@ export default function VerifyCode() {
             catch (err) {
                 setStatus('failed');
                 setMessage(err.response.data.message);
+            }
+            finally {
+                setTimeout(() => {
+                    actions.resetForm();
+                }, 1500)
+                setLoading(false);
             }
         },
         validationSchema: verifyCodeSchema

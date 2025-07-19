@@ -14,7 +14,8 @@ export default function UserInfoForm() {
     const [success, setSuccess] = useState('');
     const [preview, setPreview] = useState(null);
 
-    const api = process.env.REACT_APP_API_ENDPOINT;
+    const fieldError = (name) => formik.touched[name] && formik.errors[name];
+
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
@@ -59,14 +60,17 @@ export default function UserInfoForm() {
                 setSuccess(response.data.message);
 
                 setTimeout(() => {
-                    actions.resetForm();
                     navigate('/home');
-                }, 1500);
-
+                }, 2000);
             }
             catch (err) {
                 console.log(err);
                 setError(err.response.data.message);
+            }
+            finally {
+                setTimeout(() => {
+                    actions.resetForm();
+                }, 1500)
             }
         },
         validationSchema: userInfoFormSchema
@@ -107,7 +111,7 @@ export default function UserInfoForm() {
                             </div>
                         )}
                     </div>
-                    {formik.errors.image && formik.touched.image && <p className='text-red-600 text-xs'>{formik.errors.image}</p>}
+                    {fieldError("image") && <p className='text-red-600 text-xs'>{formik.errors.image}</p>}
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>Bio</label>
@@ -121,8 +125,8 @@ export default function UserInfoForm() {
                         onBlur={formik.handleBlur}
                         required
                         autoComplete='bio'
-                        className={formik.errors.bio && formik.touched.bio ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
-                    {formik.errors.bio && formik.touched.bio && <p className='text-red-600 text-xs'>{formik.errors.bio}</p>}
+                        className={fieldError("bio") ? 'bg-stone-800 text-white p-2 rounded-md text-sm border border-red-600' : 'bg-stone-800 text-white p-2 rounded-md text-sm'} />
+                    {fieldError("bio") && <p className='text-red-600 text-xs'>{formik.errors.bio}</p>}
                 </div>
                 <div className='flex flex-col gap-2'>
                     <label className='text-sm'>Profession</label>
@@ -142,6 +146,7 @@ export default function UserInfoForm() {
                             ))}
                         </select>
                     )}
+                    {fieldError("profession") && <p className='text-red-600 text-xs'>{formik.errors.profession}</p>}
                 </div>
                 <button type='submit' className='p-2 rounded-md bg-red-600 hover:bg-red-500 mt-5'>Submit</button>
                 {error ? <p className='text-red-600 text-xs'>{error}</p> : <></>}

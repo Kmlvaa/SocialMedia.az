@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_ENDPOINT;
+import { getProfessions } from '../services/AuthService';
 
 export const fetchProfessions = createAsyncThunk(
   'professions/fetchProfessions',
   async () => {
-    const response = await axios.get(`${API_URL}/user/professions`);
+    const response = await getProfessions();
+    console.log(response.data)
     return response.data;
   } 
 );

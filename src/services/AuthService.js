@@ -17,3 +17,6 @@ export const verifyCode = (code) => {
 export const userInfoForm = (data) => {
     return httpClient.post("/user/complete", data)
 }
+export const getProfessions = (data) => {
+    return httpClient.get("/api/enums/professions", data)
+}

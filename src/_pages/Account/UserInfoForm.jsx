@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setProfileCompleted, updateProfileInfo } from '../../redux/userSlice';
 import { fetchProfessions } from '../../redux/professionsSlice';
 
-
 export default function UserInfoForm() {
 
     const [error, setError] = useState('');

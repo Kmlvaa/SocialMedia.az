@@ -12,7 +12,7 @@ export default function PageRoutes() {
   return (
     <Routes>
       <Route path='/' element={<MainLayout />}>
-        <Route path='/home' element={<Home />} />
+        <Route path='/home' index element={<Home />} />
       </Route>
       <Route path='/account' element={<AccountLayout />}>
         <Route path='/account/login' element={<Login />} />

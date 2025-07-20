@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { registerSchema } from '../../schemas/RegisterSchema';
-import { useFormik } from 'formik';
+import { replace, useFormik } from 'formik';
 import { register } from '../../services/AuthService';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../redux/userSlice';
 
 export default function Register() {
 
@@ -14,6 +16,8 @@ export default function Register() {
 
     const navigate = useNavigate();
 
+    const dispatch = useDispatch();
+
     const formik = useFormik({
         initialValues: {
             firstName: '',
@@ -24,11 +28,16 @@ export default function Register() {
         onSubmit: async (values, actions) => {
             try {
                 setLoading(true)
-                const response = await register(values);
-                setSuccess("Account created!")
+
+                const res = await register(values);
+                setSuccess("Account created!");
+
+                dispatch(setUser({
+                    emailConfirmed: res.data.verified,
+                }));
 
                 setTimeout(() => {
-                    navigate('/account/verifyCode', { state: { email: values.email } });
+                    navigate('/account/verifyCode', { state: { email: values.email } }, { replace: true });
                 }, 2000);
             }
             catch (err) {
@@ -40,7 +49,9 @@ export default function Register() {
             finally {
                 setTimeout(() => {
                     actions.resetForm();
-                }, 1500)
+                    setError('');
+                    setSuccess('');
+                }, 3000)
                 setLoading(false);
             }
         },

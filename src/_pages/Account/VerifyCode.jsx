@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { verifyCode } from '../../services/AuthService';
 import { verifyCodeSchema } from '../../schemas/VerifyCodeSchema'
+import { useDispatch } from 'react-redux';
+import { setEmailConfirmed, setUser } from '../../redux/userSlice';
 
 export default function VerifyCode() {
 
@@ -13,6 +15,8 @@ export default function VerifyCode() {
 
     const navigate = useNavigate();
     const location = useLocation();
+
+    const dispatch = useDispatch();
 
     const userEmail = location.state?.email || '';
     useEffect(() => {
@@ -32,7 +36,9 @@ export default function VerifyCode() {
                 const response = await verifyCode(String(values.code));
 
                 setStatus('success');
-                setMessage(response.data.message)
+                console.log(response.data.message)
+                setMessage(response.data.message);
+                dispatch(setEmailConfirmed(true));
 
                 setTimeout(() => {
                     navigate('/account/login');
@@ -46,7 +52,9 @@ export default function VerifyCode() {
             finally {
                 setTimeout(() => {
                     actions.resetForm();
-                }, 1500)
+                    setMessage('');
+                    setStatus('');
+                }, 3000)
                 setLoading(false);
             }
         },

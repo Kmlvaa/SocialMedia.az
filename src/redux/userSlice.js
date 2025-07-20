@@ -8,9 +8,9 @@ const initialState = {
     email: '',
     userRole: '',
     accessToken: '',
-    refreshToken: '',
     profileCompleted: false,
     isAuthenticated: false,
+    emailConfirmed: false,
     bio: '',
     profession: '',
     imageUrl: '',
@@ -21,15 +21,7 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUser(state, action) {
-            const user = action.payload;
-            state.id = user.id;
-            state.firstName = user.firstName;
-            state.lastName = user.lastName;
-            state.email = user.email;
-            state.userRole = user.userRole;
-            state.accessToken = user.accessToken;
-            state.refreshToken = user.refreshToken;
-            state.profileCompleted = user.profileCompleted;
+            Object.assign(state, action.payload);
             state.isAuthenticated = true;
         },
         updateProfileInfo(state, action) {
@@ -45,8 +37,11 @@ const userSlice = createSlice({
         setProfileCompleted(state, action) {
             state.profileCompleted = action.payload;
         },
+        setEmailConfirmed(state, action) {
+            state.emailConfirmed = action.payload;
+        },
     },
 });
 
-export const { setUser, clearUser, setProfileCompleted, updateProfileInfo } = userSlice.actions;
+export const { setUser, clearUser, setProfileCompleted, updateProfileInfo, setEmailConfirmed } = userSlice.actions;
 export default userSlice.reducer;

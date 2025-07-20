@@ -6,7 +6,7 @@ const api = Axios.create({
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-    }
+    },
 });
 
 class HttpClient {
@@ -19,17 +19,23 @@ class HttpClient {
                     originalRequest._retry = true;
                     try {
                         const refreshToken = localStorage.getItem('refreshToken');
+                        if (!refreshToken) {
+                            window.location.href = '/account/login';
+                            return Promise.reject(error);
+                        }
                         const res = await api.post('/api/refresh-token', { refreshToken });
+
                         const newAccessToken = res.data.accessToken;
 
                         this.setToken(newAccessToken);
 
                         originalRequest.headers['Authorization'] = 'Bearer ' + newAccessToken;
                         return api(originalRequest);
+
                     } catch (err) {
                         console.error('Token refresh failed:', err);
                         this.removeToken();
-                        redirect('/account/login');
+                        window.location.href = '/account/login';
                     }
                 }
 
@@ -54,9 +60,10 @@ class HttpClient {
         return api.delete(url, configs);
     }
 
-    setToken(newToken) {
-        api.defaults.headers['Authorization'] = `Bearer ${newToken}`;
-        localStorage.setItem('accessToken', newToken);
+    setToken(accessToken, refreshToken) {
+        api.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
     }
 
     removeToken() {

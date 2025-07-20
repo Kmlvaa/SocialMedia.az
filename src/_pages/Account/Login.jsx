@@ -32,13 +32,23 @@ export default function Login() {
                 setSuccess('Successfully logged in!');
                 console.log(response.data)
 
-                httpClient.setToken(response.data.accessToken);
-                dispatch(setUser(response.data));
+                httpClient.setToken(response.data.accessToken, response.data.refreshToken);
+
+                dispatch(setUser({
+                    accessToken: response.data.accessToken,
+                    refreshToken: response.data.refreshToken,
+                    profileCompleted: response.data.profileCompleted,
+                    userRole: response.data.role,
+                    id: response.data.id,
+                    firstName: response.data.firstName,
+                    lastName: response.data.lastName,
+                    email: response.data.email,
+                }));
 
                 console.log('Profile completed:', response.data.profileCompleted);
                 setTimeout(() => {
                     if (!response.data.profileCompleted) {
-                        navigate('/account/complete-profile');
+                        navigate('/account/complete-profile', { replace: true });
                     } else {
                         navigate('/home');
                         console.log('Profile completed2:', response.data.profileCompleted);
@@ -52,7 +62,9 @@ export default function Login() {
             finally {
                 setTimeout(() => {
                     actions.resetForm();
-                }, 1500)
+                    setError('');
+                    setSuccess('');
+                }, 3000)
                 setLoading(false);
             }
         },

@@ -28,6 +28,12 @@ export default function UserInfoForm() {
     }, [dispatch]);
 
     useEffect(() => {
+    if (user.profileComplete) {
+        navigate('/home', { replace: true });
+    }
+}, [user.profileComplete, navigate]);
+
+    useEffect(() => {
         return () => {
             if (preview) {
                 URL.revokeObjectURL(preview);
@@ -60,7 +66,7 @@ export default function UserInfoForm() {
                 setSuccess(response.data.message);
 
                 setTimeout(() => {
-                    navigate('/home');
+                    navigate('/home', { replace: true });
                 }, 2000);
             }
             catch (err) {
@@ -70,7 +76,9 @@ export default function UserInfoForm() {
             finally {
                 setTimeout(() => {
                     actions.resetForm();
-                }, 1500)
+                    setError('');
+                    setSuccess('');
+                }, 3000)
             }
         },
         validationSchema: userInfoFormSchema

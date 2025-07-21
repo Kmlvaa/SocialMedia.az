@@ -70,6 +70,8 @@ export default function VerifyCode() {
     return (
         <div className='flex flex-col items-center gap-4 p-10 w-96 rounded-lg bg-stone-900 text-white'>
             <h2 className='text-xl font-semibold'>Verify Your Email</h2>
+            <p className='text-center'>The 6 digit code was just sent to <span className='font-bold text-sky-500'>kmlva@gmail.com</span></p>
+            <p className='text-sm'>Code expires in 15 minutes</p>
             <form onSubmit={formik.handleSubmit} className='flex flex-col gap-4 w-full'>
                 <input
                     type='text'
@@ -96,7 +98,7 @@ export default function VerifyCode() {
                 </p>
             )}
             <div>
-                <p className='text-xs'>Don't receive a mail? Try again. <a href='/account/register' className='text-red-500 cursor-pointer hover:text-red-400'>Register</a></p>
+                <p className='text-xs'>Don't receive an email? <a href='/account/register' className='text-red-500 cursor-pointer hover:text-red-400'>Resend code</a></p>
             </div>
         </div>
     )

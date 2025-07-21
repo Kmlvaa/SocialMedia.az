@@ -1,4 +1,3 @@
-import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import MainLayout from '../_pages/Layout/MainLayout'
 import Home from '../_pages/Home'
@@ -8,6 +7,8 @@ import Register from '../_pages/Account/Register'
 import VerifyCode from '../_pages/Account/VerifyCode'
 import UserInfoForm from '../_pages/Account/UserInfoForm'
 import { useSelector } from 'react-redux'
+import NotFound from '../_pages/NotFound'
+import PrivateRoutes from './PrivateRoutes'
 
 export default function PageRoutes() {
 
@@ -15,8 +16,10 @@ export default function PageRoutes() {
 
   return (
     <Routes>
-      <Route path='/' element={<MainLayout />}>
-        <Route path='/home' index element={<Home />} />
+      <Route element={<PrivateRoutes />}>
+        <Route path='/' element={<MainLayout />}>
+          <Route index element={<Home />} />
+        </Route>
       </Route>
       <Route path='/account' element={<AccountLayout />}>
         <Route path='/account/login' element={<Login />} />
@@ -36,6 +39,7 @@ export default function PageRoutes() {
           }
         />
       </Route>
+      <Route path='*' element={<NotFound />} />
     </Routes>
   )
 }

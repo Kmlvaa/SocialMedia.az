@@ -7,6 +7,7 @@ const api = Axios.create({
         Accept: "application/json",
         "Content-Type": "application/json",
     },
+    // withCredentials: true,
 });
 
 class HttpClient {

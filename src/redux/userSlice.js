@@ -7,7 +7,6 @@ const initialState = {
     lastName: '',
     email: '',
     userRole: '',
-    accessToken: '',
     profileCompleted: false,
     isAuthenticated: false,
     emailConfirmed: false,

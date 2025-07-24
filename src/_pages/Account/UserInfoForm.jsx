@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { userInfoForm } from '../../services/AuthService';
+import { submitProfilephoto, userInfoForm } from '../../services/AuthService';
 import { useEffect } from 'react';
 import { userInfoFormSchema } from '../../schemas/UserInfoFormSchema';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,12 +49,16 @@ export default function UserInfoForm() {
         },
         onSubmit: async (values, actions) => {
             try {
-                const formData = new FormData();
-                formData.append('image', values.image);
-                formData.append('bio', values.bio);
-                formData.append('profession', values.profession);
+                const formData1 = new FormData();
+                formData1.append('profession', values.profession);
+                formData1.append('bio', values.bio);
+                
+                const formData2 = new FormData();
+                formData2.append('image', values.image);
 
-                const response = await userInfoForm(formData);
+                const response = await userInfoForm(formData1);
+                const res2 = await submitProfilephoto(formData2);
+
                 dispatch(updateProfileInfo({
                     bio: formik.values.bio,
                     profession: formik.values.profession,
@@ -70,8 +74,9 @@ export default function UserInfoForm() {
                 }, 2000);
             }
             catch (err) {
-                console.log(err);
-                setError(err.response.data.message);
+                console.log(err.data.message);
+                setError(err?.response.data.message);
+                setPreview(null)
             }
             finally {
                 setTimeout(() => {

@@ -12,7 +12,12 @@ export const verifyCode = (code) => {
     })
 }
 export const userInfoForm = (data) => {
-    return httpClient.post("/user/complete", data)
+    return httpClient.post("/user/complete/profile", data)
+}
+export const submitProfilephoto = (photo) => {
+    return httpClient.post("/user/complete/photo", photo, {
+        withCredentials: true
+    })
 }
 export const getProfessions = (data) => {
     return httpClient.get("/api/enums/professions", data)
